@@ -1,33 +1,39 @@
 import React from 'react';
-import { ShoppingCart, Store, User, Search, Phone, Flame, FileCode, CheckCircle2 } from 'lucide-react';
+import {
+  ShoppingBag,
+  Store,
+  Search,
+  MapPin,
+  X,
+  Phone,
+  CheckCircle2,
+} from 'lucide-react';
 import { BADALGACHHI_UNIONS } from '../types';
 
 interface HeaderProps {
-  activeView: 'store' | 'vendor' | 'track' | 'schema';
-  setActiveView: (view: 'store' | 'vendor' | 'track' | 'schema') => void;
   cartCount: number;
   openCart: () => void;
+  activeView: 'store' | 'vendor' | 'track' | 'schema';
+  setActiveView: (view: 'store' | 'vendor' | 'track' | 'schema') => void;
   selectedUnion: string;
   setSelectedUnion: (union: string) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  onOpenVendorLogin?: () => void;
-  onOpenAdmin?: () => void;
-  isAdminLoggedIn?: boolean;
+  announcementText?: string;
+  helplinePhone?: string;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  activeView,
-  setActiveView,
   cartCount,
   openCart,
+  activeView,
+  setActiveView,
   selectedUnion,
   setSelectedUnion,
   searchQuery,
   setSearchQuery,
-  onOpenVendorLogin,
-  onOpenAdmin,
-  isAdminLoggedIn,
+  announcementText = 'বদলগাছী উপজেলার ৮টি ইউনিয়নে দ্রুততম হোম ডেলিভারি ও ক্যাশ অন ডেলিভারি সুবিধা!',
+  helplinePhone = '01755383039',
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-stone-200 shadow-xs">
@@ -38,19 +44,19 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-800 text-[11px] font-medium">
               বদলগাছী, নওগাঁ
             </span>
-            <span className="hidden sm:inline text-emerald-100">
-              উপজেলার ৮টি ইউনিয়নের স্থানীয় দোকান ও তাজা পণ্যের অনলাইন হাট
+            <span className="hidden sm:inline text-emerald-100 font-medium">
+              {announcementText}
             </span>
           </div>
           <div className="flex items-center gap-4 text-xs">
             <a
-              href="https://wa.me/8801755383039"
+              href={`https://wa.me/88${helplinePhone.replace(/[^0-9]/g, '')}`}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 hover:text-emerald-200 transition-colors font-medium"
             >
               <Phone className="w-3.5 h-3.5" />
-              <span>সহায়তা ও হোয়াটসঅ্যাপ: ০১755383039</span>
+              <span>সহায়তা ও হোয়াটসঅ্যাপ: {helplinePhone}</span>
             </a>
             <span className="hidden md:inline text-emerald-300">|</span>
             <span className="hidden md:inline text-emerald-100 text-[11px]">
@@ -80,58 +86,59 @@ export const Header: React.FC<HeaderProps> = ({
                   বদলগাছী
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-stone-500 font-medium -mt-0.5">
-                হাইপার-লোকাল ই-কমার্স | নওগাঁ
+              <p className="text-[11px] text-stone-500 font-medium leading-none mt-0.5">
+                উপজেলা ডিজিটাল হাট • নওগাঁ
               </p>
             </div>
           </button>
 
-          {/* Search bar (Storefront mode) */}
-          {activeView === 'store' && (
-            <div className="hidden lg:flex flex-1 max-w-md items-center relative">
+          {/* Search Bar */}
+          <div className="flex-1 max-w-md hidden md:block">
+            <div className="relative">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="পণ্য বা দোকানের নাম দিয়ে খুঁজুন (যেমন: ক্ষীরমোহন, চাল, শোপিস)..."
-                className="w-full pl-9 pr-4 py-2 text-sm bg-stone-100 border border-stone-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+                placeholder="মিষ্টি, পোড়ামাটির পাত্র, তাজা গুড় বা পণ্য খুঁজুন..."
+                className="w-full pl-9 pr-8 py-2 bg-stone-100 hover:bg-stone-50 focus:bg-white text-sm rounded-xl border border-stone-200 focus:outline-hidden focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition-all"
               />
-              <Search className="w-4 h-4 text-stone-400 absolute left-3" />
+              <Search className="w-4 h-4 text-stone-400 absolute left-3 top-2.5" />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-2.5 text-stone-400 hover:text-stone-600"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
-          )}
+          </div>
 
-          {/* Action buttons & View switcher */}
+          {/* Action Buttons */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* View Switch Buttons */}
-            <div className="bg-stone-100 p-1 rounded-lg flex items-center gap-1 border border-stone-200 text-xs font-medium">
-              <button
-                onClick={() => setActiveView('store')}
-                className={`px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 ${
-                  activeView === 'store'
-                    ? 'bg-white text-emerald-700 shadow-xs font-semibold'
-                    : 'text-stone-600 hover:text-stone-900'
-                }`}
-              >
-                <span>বাজার</span>
-              </button>
-              <button
-                onClick={() => setActiveView('vendor')}
-                className={`px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 ${
-                  activeView === 'vendor'
-                    ? 'bg-emerald-600 text-white shadow-xs font-semibold'
-                    : 'text-stone-600 hover:text-stone-900'
-                }`}
-              >
-                <Store className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">দোকানদার ড্যাশবোর্ড</span>
-                <span className="sm:hidden">দোকানদার</span>
-              </button>
+            {/* Union Quick Dropdown */}
+            <div className="relative hidden lg:block">
+              <div className="flex items-center gap-1 text-xs text-stone-600 bg-stone-100 hover:bg-stone-200/80 px-2.5 py-1.5 rounded-lg transition-colors border border-stone-200">
+                <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <select
+                  value={selectedUnion}
+                  onChange={(e) => setSelectedUnion(e.target.value)}
+                  className="bg-transparent text-xs font-semibold text-stone-800 focus:outline-hidden cursor-pointer"
+                >
+                  <option value="">সকল ইউনিয়ন</option>
+                  {BADALGACHHI_UNIONS.map((u) => (
+                    <option key={u} value={u}>
+                      {u}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            {/* Track Order link */}
+            {/* Order Tracking */}
             <button
               onClick={() => setActiveView('track')}
-              className={`p-2 sm:px-3 sm:py-1.5 rounded-lg text-xs font-medium border transition-colors flex items-center gap-1.5 ${
+              className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-colors flex items-center gap-1.5 ${
                 activeView === 'track'
                   ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
                   : 'border-stone-200 text-stone-700 hover:bg-stone-50'
@@ -139,56 +146,19 @@ export const Header: React.FC<HeaderProps> = ({
               title="অর্ডার ট্র্যাক করুন"
             >
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span className="hidden md:inline">ট্র্যাক অর্ডার</span>
+              <span>ট্র্যাক অর্ডার</span>
             </button>
-
-            {/* Firebase & Flutter architecture viewer */}
-            <button
-              onClick={() => setActiveView('schema')}
-              className={`p-2 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-medium border transition-colors flex items-center gap-1.5 ${
-                activeView === 'schema'
-                  ? 'bg-amber-50 border-amber-300 text-amber-800'
-                  : 'border-stone-200 text-stone-600 hover:bg-stone-50'
-              }`}
-              title="Firebase & Flutter Schema"
-            >
-              <FileCode className="w-4 h-4 text-amber-600" />
-              <span className="hidden xl:inline">ফায়ারবেস স্কিমা ও রুলস</span>
-            </button>
-
-            {/* Vendor Email Login Button */}
-            {onOpenVendorLogin && (
-              <button
-                onClick={onOpenVendorLogin}
-                className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-stone-200 hover:border-emerald-500 hover:text-emerald-700 transition-colors"
-                title="দোকানদার ইমেইল লগইন"
-              >
-                <User className="w-3.5 h-3.5 text-emerald-600" />
-                <span>মার্চেন্ট লগইন</span>
-              </button>
-            )}
-
-            {/* Admin Badge if logged in */}
-            {isAdminLoggedIn && onOpenAdmin && (
-              <button
-                onClick={onOpenAdmin}
-                className="px-2.5 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-bold flex items-center gap-1 shadow-xs hover:bg-rose-700 transition-colors"
-                title="অ্যাডমিন প্যানেল"
-              >
-                <span>এডমিন প্যানেল</span>
-              </button>
-            )}
 
             {/* Cart Button */}
             <button
               onClick={openCart}
-              className="relative p-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors flex items-center gap-1.5 shadow-sm"
-              aria-label="শপিং কার্ট"
+              className="relative p-2 sm:px-3 sm:py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition-colors flex items-center gap-1.5 shadow-sm font-semibold text-xs"
+              aria-label="শপিং ব্যাগ"
             >
-              <ShoppingCart className="w-4 h-4" />
-              <span className="hidden sm:inline text-xs font-bold">কার্ট</span>
+              <ShoppingBag className="w-4 h-4" />
+              <span className="hidden sm:inline">ব্যাগ</span>
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-amber-500 text-stone-900 text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-md animate-pulse">
+                <span className="bg-amber-400 text-stone-900 text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-xs">
                   {cartCount}
                 </span>
               )}
@@ -196,21 +166,27 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Mobile Search & Union Selector Row */}
-        {activeView === 'store' && (
-          <div className="mt-3 lg:hidden flex flex-col gap-2">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="পণ্য বা দোকান খুঁজুন..."
-                className="w-full pl-9 pr-4 py-2 text-sm bg-stone-100 border border-stone-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-emerald-500 focus:bg-white"
-              />
-              <Search className="w-4 h-4 text-stone-400 absolute left-3 top-2.5" />
-            </div>
+        {/* Mobile search bar */}
+        <div className="mt-2.5 md:hidden">
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="পণ্য বা দোকান খুঁজুন..."
+              className="w-full pl-9 pr-8 py-2 bg-stone-100 text-xs rounded-xl border border-stone-200 focus:outline-hidden focus:ring-2 focus:ring-emerald-600"
+            />
+            <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-2.5" />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-2.5 text-stone-400"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </header>
   );

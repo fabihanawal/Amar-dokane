@@ -8,6 +8,8 @@ interface HeroBannerProps {
   totalShops: number;
   totalProducts: number;
   onRegisterShopClick: () => void;
+  heroHeadline?: string;
+  heroSubheadline?: string;
 }
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({
@@ -16,6 +18,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   totalShops,
   totalProducts,
   onRegisterShopClick,
+  heroHeadline = 'ঘরের কাছে সেরা পণ্য, আমার দোকান এ সরাসরি অর্ডার!',
+  heroSubheadline = 'ঐতিহাসিক পাহাড়পুর থেকে শুরু করে কোলা, বালুভরা ও সদর ইউনিয়নের বিশ্বস্ত উদ্যোক্তাদের তৈরি খাঁটি মিষ্টি, হস্তশিল্প, তাজা কৃষিপণ্য ও গ্রোসারি। স্থানীয়ভাবে দ্রুত হোম ডেলিভারি ও ক্যাশ অন ডেলিভারি সুবিধা।',
 }) => {
   return (
     <div className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-900 to-stone-900 text-white py-10 sm:py-14 px-4 sm:px-6 mb-8 rounded-2xl shadow-xl border border-emerald-800/40">
@@ -34,16 +38,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
-              ঘরের কাছে সেরা পণ্য, <br className="hidden sm:inline" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-amber-200">
-                আমার দোকান
-              </span>{' '}
-              এ সরাসরি অর্ডার!
+              {heroHeadline}
             </h1>
 
             <p className="text-sm sm:text-base text-stone-200 leading-relaxed max-w-2xl font-normal">
-              ঐতিহাসিক পাহাড়পুর থেকে শুরু করে কোলা, বালুভরা ও সদর ইউনিয়নের বিশ্বস্ত উদ্যোক্তাদের তৈরি
-              খাঁটি মিষ্টি, হস্তশিল্প, তাজা কৃষিপণ্য ও গ্রোসারি। স্থানীয়ভাবে দ্রুত হোম ডেলিভারি ও ক্যাশ অন ডেলিভারি সুবিধা।
+              {heroSubheadline}
             </p>
 
             {/* Quick stats & local trust tags */}

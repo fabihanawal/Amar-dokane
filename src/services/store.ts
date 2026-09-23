@@ -18,6 +18,29 @@ const STORAGE_KEYS = {
   ACTIVE_SHOP_ID: 'amar_dokan_active_shop_id_v1',
   VENDOR_EMAIL: 'amar_dokan_vendor_email_v1',
   ADMIN_AUTH: 'amar_dokan_admin_auth_v1',
+  PLATFORM_SETTINGS: 'amar_dokan_platform_settings_v1',
+};
+
+export interface PlatformSettings {
+  announcementText: string;
+  heroHeadline: string;
+  heroSubheadline: string;
+  helplinePhone: string;
+  whatsappNumber: string;
+  deliveryCharge: number;
+  minFreeDeliveryAmount: number;
+  commissionPercent: number;
+}
+
+export const DEFAULT_PLATFORM_SETTINGS: PlatformSettings = {
+  announcementText: 'বদলগাছী উপজেলার ৮টি ইউনিয়নে দ্রুততম হোম ডেলিভারি ও ক্যাশ অন ডেলিভারি সুবিধা!',
+  heroHeadline: 'ঘরের কাছে সেরা পণ্য, আমার দোকান এ সরাসরি অর্ডার!',
+  heroSubheadline: 'ঐতিহাসিক পাহাড়পুর থেকে শুরু করে কোলা, বালুভরা ও সদর ইউনিয়নের বিশ্বস্ত উদ্যোক্তাদের তৈরি খাঁটি মিষ্টি, হস্তশিল্প, তাজা কৃষিপণ্য ও গ্রোসারি।',
+  helplinePhone: '01755383039',
+  whatsappNumber: '01755383039',
+  deliveryCharge: 30,
+  minFreeDeliveryAmount: 500,
+  commissionPercent: 5,
 };
 
 function loadStorage<T>(key: string, defaultValue: T): T {
@@ -76,8 +99,9 @@ export function useAmarDokanStore() {
   const [loggedInVendorEmail, setLoggedInVendorEmail] = useState<string | null>(() =>
     loadStorage<string | null>(STORAGE_KEYS.VENDOR_EMAIL, null)
   );
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() =>
-    loadStorage<boolean>(STORAGE_KEYS.ADMIN_AUTH, false)
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
+  const [platformSettings, setPlatformSettings] = useState<PlatformSettings>(() =>
+    loadStorage<PlatformSettings>(STORAGE_KEYS.PLATFORM_SETTINGS, DEFAULT_PLATFORM_SETTINGS)
   );
 
   // Sync to localStorage
@@ -114,8 +138,8 @@ export function useAmarDokanStore() {
   }, [loggedInVendorEmail]);
 
   useEffect(() => {
-    saveStorage(STORAGE_KEYS.ADMIN_AUTH, isAdminLoggedIn);
-  }, [isAdminLoggedIn]);
+    saveStorage(STORAGE_KEYS.PLATFORM_SETTINGS, platformSettings);
+  }, [platformSettings]);
 
   // Cart operations
   const addToCart = (product: Product, quantity = 1) => {
@@ -309,6 +333,40 @@ export function useAmarDokanStore() {
     setShops((prev) => prev.map((s) => (s.shopId === shopId ? { ...s, ...updates } : s)));
   };
 
+  // Direct shop creation from Admin
+  const addShopDirectly = (
+    shopData: Omit<Shop, 'shopId' | 'createdAt' | 'rating' | 'totalReviews'> & {
+      status?: 'Active' | 'Pending' | 'Rejected';
+    }
+  ) => {
+    const newShopId = `shop-${Date.now()}`;
+    const newShop: Shop = {
+      ...shopData,
+      shopId: newShopId,
+      status: shopData.status || 'Active',
+      rating: 5.0,
+      totalReviews: 1,
+      createdAt: Date.now(),
+    };
+    setShops((prev) => [newShop, ...prev]);
+    return newShop;
+  };
+
+  // Delete Order (Admin)
+  const deleteOrder = (orderId: string) => {
+    setOrders((prev) => prev.filter((o) => o.orderId !== orderId));
+  };
+
+  // Delete Review (Admin)
+  const deleteReview = (reviewId: string) => {
+    setReviews((prev) => prev.filter((r) => r.reviewId !== reviewId));
+  };
+
+  // Platform CMS & settings update (Admin)
+  const updatePlatformSettings = (updates: Partial<PlatformSettings>) => {
+    setPlatformSettings((prev) => ({ ...prev, ...updates }));
+  };
+
   // Vendor Authentication by Email
   const loginVendorByEmail = (email: string) => {
     const normalized = email.trim().toLowerCase();
@@ -459,6 +517,11 @@ export function useAmarDokanStore() {
     approveShop,
     rejectShop,
     deleteShop,
+    addShopDirectly,
+    deleteOrder,
+    deleteReview,
+    platformSettings,
+    updatePlatformSettings,
     loggedInVendorEmail,
     setLoggedInVendorEmail,
     loginVendorByEmail,

@@ -1,21 +1,18 @@
 import React from 'react';
-import { Store, Phone, MapPin, MessageCircle, Heart, ShieldCheck, Truck } from 'lucide-react';
-import { BADALGACHHI_UNIONS } from '../types';
+import { Store, Phone, MapPin, MessageCircle, Heart, ShieldCheck, Truck, ShoppingBag, CheckCircle2, RotateCcw } from 'lucide-react';
 
 interface FooterProps {
-  onSelectUnion: (union: string) => void;
-  onOpenVendor: () => void;
-  onOpenSchema: () => void;
+  onSelectCategory?: (category: string) => void;
   onOpenAdmin: () => void;
-  onOpenVendorLogin?: () => void;
+  helplinePhone?: string;
+  whatsappPhone?: string;
 }
 
 export const Footer: React.FC<FooterProps> = ({
-  onSelectUnion,
-  onOpenVendor,
-  onOpenSchema,
+  onSelectCategory,
   onOpenAdmin,
-  onOpenVendorLogin,
+  helplinePhone = '01755383039',
+  whatsappPhone = '01755383039',
 }) => {
   const [heartClicks, setHeartClicks] = React.useState(0);
   const clickTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -38,6 +35,7 @@ export const Footer: React.FC<FooterProps> = ({
       setHeartClicks(0);
     }, 2000);
   };
+
   return (
     <footer className="bg-stone-900 text-stone-300 pt-12 pb-8 border-t border-stone-800 mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -59,7 +57,7 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
 
             <p className="text-xs text-stone-400 leading-relaxed">
-              বদলগাছী উপজেলার ৮টি ইউনিয়নের প্রান্তিক উদ্যোক্তা ও দোকানদারদের ডিজিটাল বাজার। স্থানীয় খাঁটি মিষ্টি, হস্তশিল্প, কৃষিপণ্য ও গ্রোসারি সরাসরি ক্রেতার ঘরে পৌঁছে দেওয়ার বিশ্বস্ত মাধ্যম।
+              বদলগাছী উপজেলার ৮টি ইউনিয়নের প্রান্তিক উদ্যোক্তা ও স্থানীয় কারিগরদের খাঁটি পণ্য সরাসরি আপনার দোরগোড়ায় পৌঁছে দেওয়ার বিশ্বস্ত মাধ্যম। ক্যাশ অন ডেলিভারিতে ঝামেলাহীন কেনাকাটা করুন।
             </p>
 
             <div className="pt-2">
@@ -70,68 +68,54 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
 
-          {/* Col 2: Badalgachhi Unions */}
+          {/* Col 2: Customer Care & Shopping Benefits */}
           <div className="space-y-3">
             <h4 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-emerald-500" />
-              <span>বদলগাছীর আওতাধীন ইউনিয়নসমূহ</span>
+              <ShoppingBag className="w-4 h-4 text-emerald-400" />
+              <span>গ্রাহক সেবা ও সুবিধা</span>
             </h4>
-            <div className="grid grid-cols-2 gap-1.5 text-xs text-stone-400">
-              {BADALGACHHI_UNIONS.map((union) => (
-                <button
-                  key={union}
-                  onClick={() => {
-                    onSelectUnion(union);
-                    window.scrollTo({ top: 300, behavior: 'smooth' });
-                  }}
-                  className="text-left hover:text-emerald-400 transition-colors py-1 truncate"
-                >
-                  📍 {union}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Col 3: Quick Links & Services */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-              দ্রুত লিংক ও সেবা
-            </h4>
-            <ul className="space-y-2 text-xs text-stone-400">
-              <li>
-                <button
-                  onClick={onOpenVendor}
-                  className="hover:text-emerald-400 transition-colors flex items-center gap-1.5"
-                >
-                  <span>🏪 দোকানদার ড্যাশবোর্ড ও পণ্য আপলোড</span>
-                </button>
+            <ul className="space-y-2.5 text-xs text-stone-400">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                <span>১০০% খাঁটি ও তাজা স্থানীয় পণ্যের নিশ্চয়তা</span>
               </li>
-              {onOpenVendorLogin && (
-                <li>
-                  <button
-                    onClick={onOpenVendorLogin}
-                    className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 text-emerald-400 font-semibold"
-                  >
-                    <span>🔑 দোকানদার লগইন (ইমেইল দিয়ে)</span>
-                  </button>
-                </li>
-              )}
-              <li>
-                <button
-                  onClick={onOpenSchema}
-                  className="hover:text-emerald-400 transition-colors flex items-center gap-1.5"
-                >
-                  <span>⚡ ফায়ারবেস স্কিমা ও ফ্লাটার কোড</span>
-                </button>
+              <li className="flex items-start gap-2">
+                <Truck className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                <span>দ্রুততম হোম ডেলিভারি ও ক্যাশ অন ডেলিভারি</span>
               </li>
-              <li className="flex items-center gap-1.5">
-                <Truck className="w-3.5 h-3.5 text-emerald-400" />
-                <span>বদলগাছী ও নওগাঁ জেলায় কুরিয়ার/হোম ডেলিভারি</span>
+              <li className="flex items-start gap-2">
+                <RotateCcw className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                <span>পণ্য দেখে মূল্য পরিশোধ ও সহজ রিটার্ন সুবিধা</span>
               </li>
-              <li>
-                <span>প্ল্যাটফর্ম কমিশন: প্রতি অর্ডারে মাত্র ৫%</span>
+              <li className="flex items-start gap-2">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                <span>যাচাইকৃত স্থানীয় বিশ্বস্ত দোকানদার ও খামারি</span>
               </li>
             </ul>
+          </div>
+
+          {/* Col 3: Popular Local Specialities */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+              বদলগাছীর জনপ্রিয় পণ্য
+            </h4>
+            <div className="flex flex-col space-y-2 text-xs text-stone-400">
+              <span className="hover:text-emerald-400 cursor-default">
+                🍯 খাঁটি মিষ্টি, চমচম ও সুস্বাদু দই
+              </span>
+              <span className="hover:text-emerald-400 cursor-default">
+                🏺 ঐতিহাসিক পাহাড়পুর পোড়ামাটির মৃৎশিল্প
+              </span>
+              <span className="hover:text-emerald-400 cursor-default">
+                🌾 স্থানীয় কৃষকদের তাজা শাকসবজি ও ফলমূল
+              </span>
+              <span className="hover:text-emerald-400 cursor-default">
+                🛍️ দেশি তেল, মসলা ও দৈনন্দিন গ্রোসারি
+              </span>
+              <span className="hover:text-emerald-400 cursor-default">
+                🍗 ফ্রেশ দেশি মুরগি ও ডিম
+              </span>
+            </div>
           </div>
 
           {/* Col 4: Contact & Developed By */}
@@ -143,20 +127,20 @@ export const Footer: React.FC<FooterProps> = ({
             <div className="space-y-2.5 text-xs text-stone-300">
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                <a href="tel:01755383039" className="hover:text-white font-bold">
-                  01755383039
+                <a href={`tel:${helplinePhone}`} className="hover:text-white font-bold">
+                  {helplinePhone}
                 </a>
               </p>
 
               <p className="flex items-center gap-2">
                 <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
                 <a
-                  href="https://wa.me/8801755383039"
+                  href={`https://wa.me/88${whatsappPhone.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-white font-bold text-emerald-400"
                 >
-                  WhatsApp: 01755383039
+                  WhatsApp: {whatsappPhone}
                 </a>
               </p>
 
@@ -174,7 +158,7 @@ export const Footer: React.FC<FooterProps> = ({
                 Developed by <span className="text-emerald-400">RSTS-BD</span> (আরএসটিএস-বিডি)
               </p>
               <p className="text-[10px] text-stone-400">
-                Contact: <strong className="text-emerald-300">01755383039</strong>
+                Contact: <strong className="text-emerald-300">{helplinePhone}</strong>
               </p>
             </div>
           </div>
@@ -206,7 +190,7 @@ export const Footer: React.FC<FooterProps> = ({
               )}
             </button>
             <span>
-              Developed by <strong className="text-emerald-400">RSTS-BD</strong> | 01755383039
+              Developed by <strong className="text-emerald-400">RSTS-BD</strong> | {helplinePhone}
             </span>
           </p>
         </div>

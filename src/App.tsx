@@ -119,9 +119,8 @@ export default function App() {
         setSelectedUnion={setSelectedUnion}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        onOpenVendorLogin={() => setIsVendorLoginOpen(true)}
-        onOpenAdmin={() => setIsAdminModalOpen(true)}
-        isAdminLoggedIn={store.isAdminLoggedIn}
+        announcementText={store.platformSettings.announcementText}
+        helplinePhone={store.platformSettings.helplinePhone}
       />
 
       {/* Main Content Area */}
@@ -136,6 +135,8 @@ export default function App() {
               totalShops={store.shops.length}
               totalProducts={store.products.length}
               onRegisterShopClick={() => setIsRegisterShopOpen(true)}
+              heroHeadline={store.platformSettings.heroHeadline}
+              heroSubheadline={store.platformSettings.heroSubheadline}
             />
 
             {/* Filter Toolbar */}
@@ -398,10 +399,13 @@ export default function App() {
         }}
       />
 
-      {/* Admin Panel Modal (Triggered by 3 taps on red heart in footer) */}
+      {/* Admin Panel Modal (Triggered ONLY by 3 taps on red heart in footer + password login) */}
       <AdminModal
         isOpen={isAdminModalOpen}
-        onClose={() => setIsAdminModalOpen(false)}
+        onClose={() => {
+          store.logoutAdmin();
+          setIsAdminModalOpen(false);
+        }}
         isAdminLoggedIn={store.isAdminLoggedIn}
         onLoginAdmin={store.loginAdmin}
         onLogoutAdmin={store.logoutAdmin}
@@ -411,6 +415,16 @@ export default function App() {
         onApproveShop={store.approveShop}
         onRejectShop={store.rejectShop}
         onDeleteShop={store.deleteShop}
+        onUpdateShop={store.updateShop}
+        onAddShopDirect={store.addShopDirectly}
+        onAddProduct={store.addProduct}
+        onUpdateProduct={store.updateProduct}
+        onDeleteProduct={store.deleteProduct}
+        onUpdateOrderStatus={store.updateOrderStatus}
+        onDeleteOrder={store.deleteOrder}
+        platformSettings={store.platformSettings}
+        onUpdatePlatformSettings={store.updatePlatformSettings}
+        onResetToDefaults={store.resetToDefaults}
         onSelectShopForDashboard={(shopId) => {
           store.setActiveShopId(shopId);
           setActiveView('vendor');
@@ -429,16 +443,14 @@ export default function App() {
         shops={store.shops}
       />
 
-      {/* Footer */}
+      {/* Footer - Clean, Customer-Centric; 3 clicks on red heart opens Admin login */}
       <Footer
-        onSelectUnion={(union) => {
-          setSelectedUnion(union);
-          setActiveView('store');
+        onOpenAdmin={() => {
+          store.logoutAdmin(); // Always require submitting email and password
+          setIsAdminModalOpen(true);
         }}
-        onOpenVendor={() => setActiveView('vendor')}
-        onOpenSchema={() => setActiveView('schema')}
-        onOpenAdmin={() => setIsAdminModalOpen(true)}
-        onOpenVendorLogin={() => setIsVendorLoginOpen(true)}
+        helplinePhone={store.platformSettings.helplinePhone}
+        whatsappPhone={store.platformSettings.whatsappNumber}
       />
     </div>
   );
